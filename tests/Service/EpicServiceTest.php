@@ -4,6 +4,7 @@ namespace App\Test\Service;
 
 use App\Service\EpicService;
 use DateTime;
+use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 
 class EpicServiceTest extends TestCase
@@ -34,6 +35,27 @@ class EpicServiceTest extends TestCase
 
         $this->assertNotNull($data);
         $this->assertIsArray($data);
-        $this->assertArrayHasKey($dateStart->format('Y-m-d'), $data);
+        $this->assertArrayHasKey('0', $data);
+    }
+
+    public function testFilterDataByTimezone()
+    {
+        $dateStart = DateTime::createFromFormat('Y-m-d', '2021-03-12');
+        $dateEnd = DateTime::createFromFormat('Y-m-d', '2021-03-15');
+
+        $data = $this->epicService->getDataByDates($dateStart, $dateEnd);
+        $filteredData = $this->epicService->filterDataByTimezone($data, new DateTimeZone("Europe/Madrid"));
+
+        $this->assertNotNull($filteredData);
+        $this->assertIsArray($filteredData);
+    }
+
+    public function testGetImageFromData()
+    {
+        $date = DateTime::createFromFormat('Y-m-d', '2021-03-15');
+        $data = $this->epicService->getDataByDate($date);
+        $image = $this->epicService->getImageFromData($data[0]);
+
+        $this->assertIsString($image);
     }
 }

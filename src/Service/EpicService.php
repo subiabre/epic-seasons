@@ -42,7 +42,7 @@ class EpicService
             $dateStart->add(new DateInterval('P1D'));
 
             if ($image !== null) {
-                $images[$dateStart->format('Y-m-d')] = $image;
+                $images = array_merge($images, $image);
             }
         }
 
@@ -56,13 +56,13 @@ class EpicService
      * @param int $margin Degrees of deviation from the timezone to take images data in
      * @return array
      */
-    public function filterDataByTimezone(array $images, DateTimeZone $timezone, int $margin = 3): array
+    public function filterDataByTimezone(array $images, DateTimeZone $timezone, int $margin = 10): array
     {
         $target = $timezone->getLocation()['longitude'];
 
-        foreach ($images as $key => $image) {
-            $lowerMargin = $image['centroid_coordinates']['lon'] - $margin;
-            $upperMargin = $image['centroid_coordinates']['lon'] + $margin;
+        foreach ($images as $key => $data) {
+            $lowerMargin = $data['centroid_coordinates']['lon'] - $margin;
+            $upperMargin = $data['centroid_coordinates']['lon'] + $margin;
             
             if ($target > $lowerMargin && $target < $upperMargin) {
                 array_splice($images, $key, 1);
