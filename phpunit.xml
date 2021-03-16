@@ -1,0 +1,17 @@
+<phpunit 
+    bootstrap="vendor/autoload.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    verbose="true"
+>
+
+    <testsuites>
+        <testsuite name="epic-seasons Unit Tests">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>
