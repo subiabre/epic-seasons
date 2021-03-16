@@ -9,9 +9,9 @@
     "description": "Generate gifs to see seasons pass with EPIC satellite imagery",
     "type": "project",
     "require": {
-        "sybio/gif-creator": "^1.0",
         "symfony/console": "^5.2",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "moroz1999/gif-creator": "^1.1"
     },
     "license": "MIT",
     "authors": [

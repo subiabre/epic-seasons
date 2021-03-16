@@ -1,6 +1,12 @@
 FROM php:cli
 
-RUN apt-get update -y && apt-get install -y zip unzip curl && apt-get clean -y
+RUN apt-get update && apt-get install -y \
+        zip unzip curl \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
 
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \

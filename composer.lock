@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f9667e15eda2377fef17dbd0d3e88da",
+    "content-hash": "467ac32bc9b1cb566bb99ad8daf431fb",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -70,6 +70,51 @@
                 }
             ],
             "time": "2020-11-10T18:47:58+00:00"
+        },
+        {
+            "name": "moroz1999/gif-creator",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moroz1999/GifCreator.git",
+                "reference": "c8128b0382cf0357f5746ae5aaef8e4aa40363e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moroz1999/GifCreator/zipball/c8128b0382cf0357f5746ae5aaef8e4aa40363e8",
+                "reference": "c8128b0382cf0357f5746ae5aaef8e4aa40363e8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "GifCreator": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Clément Guillemain",
+                    "homepage": "http://clementguillemain.fr",
+                    "role": "Developer / Freelancer"
+                }
+            ],
+            "description": "PHP class that creates animated GIF from multiple images",
+            "homepage": "https://github.com/Sybio/GifCreator",
+            "keywords": [
+                "animated",
+                "creation",
+                "encode",
+                "gif",
+                "php"
+            ],
+            "time": "2017-06-21T19:23:03+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1829,51 +1874,6 @@
                 }
             ],
             "time": "2020-09-28T06:39:44+00:00"
-        },
-        {
-            "name": "sybio/gif-creator",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Sybio/GifCreator.git",
-                "reference": "250fc2f705181693c6c40b3d569d62353164bcbf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Sybio/GifCreator/zipball/250fc2f705181693c6c40b3d569d62353164bcbf",
-                "reference": "250fc2f705181693c6c40b3d569d62353164bcbf",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "GifCreator": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Clément Guillemain",
-                    "homepage": "http://clementguillemain.fr",
-                    "role": "Developer / Freelancer"
-                }
-            ],
-            "description": "PHP class that creates animated GIF from multiple images",
-            "homepage": "https://github.com/Sybio/GifCreator",
-            "keywords": [
-                "animated",
-                "creation",
-                "encode",
-                "gif",
-                "php"
-            ],
-            "time": "2012-10-13T09:04:46+00:00"
         },
         {
             "name": "symfony/console",
