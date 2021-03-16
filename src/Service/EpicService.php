@@ -41,7 +41,7 @@ class EpicService
             $image = $this->getDataByDate($dateStart);
             $dateStart->add(new DateInterval('P1D'));
 
-            if ($image !== null) {
+            if (count($image) > 0) {
                 $images = array_merge($images, $image);
             }
         }
@@ -59,17 +59,19 @@ class EpicService
     public function filterDataByTimezone(array $images, DateTimeZone $timezone, int $margin = 10): array
     {
         $target = $timezone->getLocation()['longitude'];
+        $lowerMargin = $target - $margin;
+        $upperMargin = $target + $margin;
 
+        $filtered = [];
         foreach ($images as $key => $data) {
-            $lowerMargin = $data['centroid_coordinates']['lon'] - $margin;
-            $upperMargin = $data['centroid_coordinates']['lon'] + $margin;
+            $location = $data['centroid_coordinates']['lon'];
             
-            if ($target > $lowerMargin && $target < $upperMargin) {
-                array_splice($images, $key, 1);
+            if ($location > $lowerMargin && $location < $upperMargin) {
+               array_push($filtered, $data);
             }       
         }
 
-        return $images;
+        return $filtered;
     }
 
     /**
@@ -86,7 +88,7 @@ class EpicService
         $month = $date->format('m');
         $day = $date->format('d');
 
-        $name = $data['image'] . $type;
+        $name = $data['image'] . "." . $type;
 
         return self::ARCHIVE . "/$year/$month/$day/$type/$name";
     }

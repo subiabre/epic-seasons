@@ -48,6 +48,7 @@ class EpicServiceTest extends TestCase
 
         $this->assertNotNull($filteredData);
         $this->assertIsArray($filteredData);
+        $this->assertLessThan(count($data), count($filteredData));
     }
 
     public function testGetImageFromData()
