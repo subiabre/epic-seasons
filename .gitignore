@@ -1,3 +1,6 @@
-/vendor/
+# generated images should go here
+/cgi/
 
+# composer and dependencies generated files
+/vendor/
 .phpunit.result*
