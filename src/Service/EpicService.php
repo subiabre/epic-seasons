@@ -12,6 +12,58 @@ class EpicService
     public const ARCHIVE = "https://epic.gsfc.nasa.gov/archive/natural";
 
     /**
+     * Send a curl request
+     * @param string $api URI to request to
+     * @return array|null Json decoded response
+     */
+    private function request(string $api): ?array
+    {
+        $ch = \curl_init();
+
+        \curl_setopt($ch, CURLOPT_URL, $api);
+        \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        \curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        
+        return \json_decode(curl_exec($ch), true);
+    }
+
+    /**
+     * Get all the available dates in the EPIC API
+     * @return array|null
+     */
+    public function getAvailableDates(): ?array
+    {
+        $api = self::API . '/all';
+
+        return $this->request($api);
+    }
+
+    /**
+     * Get all the available dates in the EPIC API between two dates
+     * @param DateTime $dateStart
+     * @param DateTime $dateEnd
+     * @return array
+     */
+    public function getAvailableDatesByDates(DateTime $dateStart, DateTime $dateEnd): array
+    {
+        $available = $this->getAvailableDates();
+
+        $dates = [];
+        foreach ($available as $key => $value) {
+            $date = DateTime::createFromFormat('Y-m-d', $value['date']);
+
+            if ($date < $dateStart) break;
+
+            if ($date > $dateStart && $date < $dateEnd) {
+                array_push($dates, $date);
+            }
+        }
+
+        return $dates;
+    }
+
+    /**
      * Get all images data from the EPIC API for a given date
      * @param DateTime $date
      * @return array|null
@@ -19,12 +71,8 @@ class EpicService
     public function getDataByDate(DateTime $date): ?array
     {
         $api = self::API . '/date/' . $date->format('Y-m-d');
-        $ch = \curl_init();
-
-        \curl_setopt($ch, CURLOPT_URL, $api);
-        \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         
-        return \json_decode(curl_exec($ch), true);
+        return $this->request($api);
     }
 
     /**
@@ -35,18 +83,14 @@ class EpicService
      */
     public function getDataByDates(DateTime $dateStart, DateTime $dateEnd): array
     {
-        $images = [];
+        $available = $this->getAvailableDatesByDates($dateStart, $dateEnd);
 
-        while ($dateStart < $dateEnd) {
-            $image = $this->getDataByDate($dateStart);
-            $dateStart->add(new DateInterval('P1D'));
-
-            if (count($image) > 0) {
-                $images = array_merge($images, $image);
-            }
+        $data = [];
+        foreach ($available as $date) {
+            $data = array_merge($data, $this->getDataByDate($date));
         }
 
-        return $images;
+        return $data;
     }
 
     /**
