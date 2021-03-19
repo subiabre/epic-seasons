@@ -19,5 +19,8 @@
             "name": "Daniel Subiabre",
             "email": "subiabrewd@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "subiabre/appgati": "dev-master"
+    }
 }
