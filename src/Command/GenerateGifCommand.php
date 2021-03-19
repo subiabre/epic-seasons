@@ -60,11 +60,11 @@ class GenerateGifCommand extends Command
         $gati->step('filtering');
         
         $data = $epic->filterDataByTimezone($data, $timezone, $input->getOption('timezone-margin'));
-        
-        $frames = []; $durations = [];
+        $durations = array_fill(0, count($data), $input->getOption('frame-duration'));
+
+        $frames = []; 
         foreach ($data as $key => $value) {
             $frames[] = $epic->getImageFromData($value, $input->getOption('sourcetype'));
-            $durations[] = $input->getOption('frame-duration');
         }
 
         $gati->step('filtered');
