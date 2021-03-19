@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Service\EpicService;
+use AppGati;
 use DateTime;
 use DateTimeZone;
 use GifCreator\GifCreator;
@@ -31,6 +32,7 @@ class GenerateGifCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $gati = new AppGati();
         $epic = new EpicService();
         $generator = new GifCreator();
 
@@ -44,18 +46,20 @@ class GenerateGifCommand extends Command
         );
 
         $output->writeln("<comment>Fetching data for the specified dates...</comment>");
-        
-        $data = $epic->getDataByDates($dateStart, $dateEnd);
-        $dataCount = count($data);
+        $gati->step('fetching');
 
-        $output->writeln("<info>Got $dataCount elements.</info>");
+        $data = $epic->getDataByDates($dateStart, $dateEnd);
+        $gati->step('fetched');
+
+        $dataCount = count($data);
+        $timeSpent = $gati->getTimeDifference('fetching', 'fetched');
+
+        $output->writeln("<info>Got $dataCount elements in $timeSpent seconds.</info>");
 
         $output->writeln("<comment>Filtering images for the specified timezone...</comment>");
+        $gati->step('filtering');
         
         $data = $epic->filterDataByTimezone($data, $timezone, $input->getOption('timezone-margin'));
-        $dataCount = count($data);
-
-        $output->writeln("<info>Got $dataCount elements.</info>");
         
         $frames = []; $durations = [];
         foreach ($data as $key => $value) {
@@ -63,11 +67,24 @@ class GenerateGifCommand extends Command
             $durations[] = $input->getOption('frame-duration');
         }
 
+        $gati->step('filtered');
+
+        $dataCount = count($data);
+        $timeSpent = $gati->getTimeDifference('filtering', 'filtered');
+
+        $output->writeln("<info>Got $dataCount elements in $timeSpent seconds.</info>");
+
         $output->writeln("<comment>Generating final image...<comment>");
+        $gati->step('generating');
+
         $generator->create($frames, $durations, $input->getOption('loopings'));
         file_put_contents('cgi/' . $filename, $generator->getGif());
 
-        $output->writeln("<info>Generated $filename with $dataCount frames.</info>");
+        $gati->step('generated');
+
+        $timeSpent = $gati->getTimeDifference('generating', 'generated');
+
+        $output->writeln("<info>Generated $filename with $dataCount frames in $timeSpent.</info>");
         return self::SUCCESS;
     }
 }
