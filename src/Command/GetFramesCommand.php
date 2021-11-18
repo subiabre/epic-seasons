@@ -14,8 +14,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class GetFramesCommand extends Command
 {
-    public const MESSAGE_AVAILABLE = "Getting available images for the dates %s <-> %s.\n";
+    public const MESSAGE_AVAILABLE = "Getting available images between %s and %s.\n";
     public const MESSAGE_FILTERING = "Filtering images for the Timezone %s.\n";
+    public const MESSAGE_DOWNLOADING = "Downloading images.\n";
     public const MESSAGE_IMAGES = "Got %d images.\n";
 
     protected function configure()
@@ -36,6 +37,8 @@ class GetFramesCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $epic = new EpicService();
 
+        $directory = sprintf('%s/var/frames', dirname(__DIR__, 2));
+
         $timezone = new DateTimeZone($input->getArgument('timezone'));
 
         $dateStart = DateTime::createFromFormat('Y-m-d', $input->getArgument('start'));
@@ -52,11 +55,16 @@ class GetFramesCommand extends Command
         $filtered = $epic->filterDataByTimezone($available, $timezone, $margin);
         $io->write(sprintf(self::MESSAGE_IMAGES, count($filtered)));
 
+        if (!file_exists($directory)) {
+            mkdir($directory);
+        }
+
+        $io->write(self::MESSAGE_DOWNLOADING);
         $io->progressStart(count($filtered));
         foreach ($filtered as $key => $value) {
             copy(
                 $epic->getImageFromData($value, $type),
-                sprintf('var/frames/epic_%s.%s', $key, $type)
+                sprintf('%s/epic_%s.%s', $directory, $key, $type)
             );
 
             $io->progressAdvance();
