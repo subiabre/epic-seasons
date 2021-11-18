@@ -10,13 +10,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class FetchFramesCommand extends Command
+class GetFramesCommand extends Command
 {
+    public const MESSAGE_AVAILABLE = "Getting available images for the dates %s <-> %s.\n";
+    public const MESSAGE_FILTERING = "Filtering images for the Timezone %s.\n";
+    public const MESSAGE_IMAGES = "Got %d images.\n";
+
     protected function configure()
     {
-        $this->setName('epic:frames');
-        $this->setDescription('Get the pictures of Earth for a timezone during a year');
+        $this->setName('frames:get');
+        $this->setDescription('Get the frames for a timezone in a time period.');
 
         $this->addArgument('timezone', InputArgument::REQUIRED, 'Name of the timezone to look for');
         $this->addArgument('start', InputArgument::REQUIRED, 'Start date to look for pictures. YYYY-MM-DD');
@@ -28,6 +33,7 @@ class FetchFramesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         $epic = new EpicService();
 
         $timezone = new DateTimeZone($input->getArgument('timezone'));
@@ -38,15 +44,24 @@ class FetchFramesCommand extends Command
         $margin = $input->getOption('margin');
         $type = $input->getOption('type');
         
+        $io->write(sprintf(self::MESSAGE_AVAILABLE, $dateStart->format('Y-m-d'), $dateEnd->format('Y-m-d')));
         $available = $epic->getDataByDates($dateStart, $dateEnd);
-        $filtered = $epic->filterDataByTimezone($available, $timezone, $margin);
+        $io->write(sprintf(self::MESSAGE_IMAGES, count($available)));
 
+        $io->write(sprintf(self::MESSAGE_FILTERING, $timezone->getName()));
+        $filtered = $epic->filterDataByTimezone($available, $timezone, $margin);
+        $io->write(sprintf(self::MESSAGE_IMAGES, count($filtered)));
+
+        $io->progressStart(count($filtered));
         foreach ($filtered as $key => $value) {
             copy(
                 $epic->getImageFromData($value, $type),
-                sprintf('cgi/%s.%s', $value['image'], $type)
+                sprintf('var/frames/epic_%s.%s', $key, $type)
             );
+
+            $io->progressAdvance();
         }
+        $io->progressFinish();
 
         return self::SUCCESS;
     }
