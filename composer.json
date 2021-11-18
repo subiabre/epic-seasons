@@ -10,8 +10,7 @@
     "type": "project",
     "require": {
         "symfony/console": "^5.2",
-        "phpunit/phpunit": "^9.5",
-        "moroz1999/gif-creator": "^1.1"
+        "phpunit/phpunit": "^9.5"
     },
     "license": "MIT",
     "authors": [
@@ -19,8 +18,5 @@
             "name": "Daniel Subiabre",
             "email": "subiabrewd@gmail.com"
         }
-    ],
-    "require-dev": {
-        "subiabre/appgati": "dev-master"
-    }
+    ]
 }
