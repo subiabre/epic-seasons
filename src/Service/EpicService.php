@@ -2,10 +2,13 @@
 
 namespace App\Service;
 
-use DateInterval;
 use DateTime;
 use DateTimeZone;
 
+/**
+ * An interface around the API at epic.gsfc.nasa.gov
+ * @package subiabre/epic-seasons
+ */
 class EpicService
 {
     public const API = "https://epic.gsfc.nasa.gov/api/natural";
@@ -34,7 +37,7 @@ class EpicService
      */
     public function getAvailableDates(): ?array
     {
-        $api = self::API . '/all';
+        $api = sprintf('%s/all', self::API);
 
         return $this->request($api);
     }
@@ -70,7 +73,7 @@ class EpicService
      */
     public function getDataByDate(DateTime $date): ?array
     {
-        $api = self::API . '/date/' . $date->format('Y-m-d');
+        $api = sprintf('%s/date/%s', self::API, $date->format('Y-m-d'));
         
         return $this->request($api);
     }
@@ -132,8 +135,11 @@ class EpicService
         $month = $date->format('m');
         $day = $date->format('d');
 
-        $name = $data['image'] . "." . $type;
+        $name = sprintf('%s.%s', $data['image'], $type);
 
-        return self::ARCHIVE . "/$year/$month/$day/$type/$name";
+        return sprintf(
+            '%s/%s/%s/%s/%s/%s',
+            self::ARCHIVE, $year, $month, $day, $type, $name
+        );
     }
 }
