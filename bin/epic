@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+require dirname(__DIR__).'/vendor/autoload.php';
+
+use App\Command\BuildFramesCommand;
+use App\Command\ClearFramesCommand;
+use App\Command\GetFramesCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('epic-seasons', '1.0.0');
+
+$application->add(new GetFramesCommand());
+$application->add(new ClearFramesCommand());
+$application->add(new BuildFramesCommand());
+
+// $application->setDefaultCommand($command->getName(), true);
+$application->run();
