@@ -1,5 +1,5 @@
 # generated images should go here
-/cgi/
+/var/
 
 # composer and dependencies generated files
 /vendor/
