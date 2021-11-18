@@ -2,11 +2,11 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 
-use App\Command\GenerateGifCommand;
+use App\Command\FetchFramesCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('echo', '1.0.0');
-$command = new GenerateGifCommand();
+$application = new Application('epic-seasons', '1.0.0');
+$command = new FetchFramesCommand();
 
 $application->add($command);
 
