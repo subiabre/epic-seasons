@@ -5,3 +5,4 @@ services:
     volumes:
       - .:/app
     command: tail -F anything
+    container_name: epic_seasons
